@@ -3,6 +3,7 @@
 lib_path = File.expand_path("../lib", __dir__)
 $LOAD_PATH.unshift(lib_path)
 
+require "bundler/setup"
 require "google/shoppinglist/reminder"
 
 reminder = Google::Shoppinglist::Reminder.new
