@@ -1,4 +1,7 @@
 {
   "name": "google-shoppinglist-reminder",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "puppeteer": "^3.1.0"
+  }
 }
