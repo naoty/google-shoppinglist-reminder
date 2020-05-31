@@ -8,10 +8,11 @@ const conversation = process.env.SLACK_CONVERSATION_ID;
 const listPrefix = "• ";
 
 (async () => {
-  const browser = await playwright.firefox.launch({
-    headless: false,
-    slowMo: 10,
-  });
+  let config = {};
+  if (process.env.hasOwnProperty("DEBUG")) {
+    config = { headless: false, slowMo: 10 };
+  }
+  const browser = await playwright.firefox.launch(config);
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto("https://shoppinglist.google.com");
@@ -33,6 +34,8 @@ const listPrefix = "• ";
   let texts = Array.from(items).map(element => element.innerText());
   texts = await Promise.all(texts);
 
+  await browser.close();
+
   // Format items
   texts = texts.map(text => {
     let sections = text.split("\n");
@@ -53,6 +56,11 @@ const listPrefix = "• ";
 
   texts = texts.filter(text => text !== null);
 
+  if (process.env.hasOwnProperty("DEBUG")) {
+    console.log(texts);
+    return;
+  }
+
   await slack.chat.postMessage({
     channel: conversation,
     blocks: [
@@ -62,6 +70,4 @@ const listPrefix = "• ";
       },
     ],
   });
-
-  await browser.close();
 })();
