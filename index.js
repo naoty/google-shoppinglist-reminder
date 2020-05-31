@@ -10,7 +10,12 @@ const listPrefix = "• ";
 (async () => {
   let config = {};
   if (process.env.hasOwnProperty("DEBUG")) {
-    config = { headless: false, slowMo: 10 };
+    config.headless = true;
+    config.slowMo = 10;
+  }
+  // For Heroku to launch browser
+  if (process.env.hasOwnProperty("DYNO")) {
+    config.args = ["--no-sandbox", "--disable-setuid-sandbox"];
   }
   const browser = await playwright.firefox.launch(config);
   const context = await browser.newContext();
