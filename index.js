@@ -33,18 +33,25 @@ const listPrefix = "• ";
   let texts = Array.from(items).map(element => element.innerText());
   texts = await Promise.all(texts);
 
-  // Remove strange words rarely included
-  texts = texts.filter(text => text != "local_mall");
-
   // Format items
   texts = texts.map(text => {
-    const sections = text.split("\n");
-    if (sections.length < 2) {
-      return `${listPrefix}${text}`;
+    let sections = text.split("\n");
+
+    // Remove strange words
+    sections = sections.filter(section => section !== "local_mall");
+
+    if (sections.length == 0) {
+      return null;
+    }
+
+    if (sections.length == 1) {
+      return `${listPrefix}${sections[0]}`;
     }
 
     return `${listPrefix}${sections[0]}（${sections.slice(1).join(" ")}）`;
   });
+
+  texts = texts.filter(text => text !== null);
 
   await slack.chat.postMessage({
     channel: conversation,
