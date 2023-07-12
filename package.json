@@ -3,6 +3,6 @@
   "private": true,
   "dependencies": {
     "@slack/web-api": "^5.9.0",
-    "playwright": "^1.0.2"
+    "playwright": "^1.36.0"
   }
 }
